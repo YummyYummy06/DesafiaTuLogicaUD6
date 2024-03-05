@@ -1,8 +1,12 @@
 package retoUD6;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 
 public class Cluedo {
 
@@ -61,74 +65,189 @@ public class Cluedo {
 			System.out.println(" + " + nombresLugares[i]);
 		}
 
-		System.out.println("\n\n ¿Quieres anadir algo mas?");
+		System.out.println("\n\n ¿Quieres anadir algo mas?"
+				+ "\nPulsa cualquier tecla para ver el menú o pulsa (-) para continuar sin cambios");
+
+		Scanner sc = new Scanner(System.in);
+
+		String respuesta;
+
+		String nuevoItem;
+
+		respuesta = sc.next();
+
+		if (!respuesta.equalsIgnoreCase("-")) {
+
+			int respuestaN = 0;
+
+			int numeroCambios;
+
+			do {
+
+				mostrarMenu();
+
+				System.out.println("Selecciona el número correspondiente" + "\ndonde te gustaría realizar cambios:");
+
+				respuestaN = sc.nextInt();
+
+				/*
+				 * Según la opción escogida se le pregunta al usuario cuántos personajes, armas
+				 * o habitaciones quiere introducir. Y se llama al método
+				 * actualizarArray(arrayAntiguo, num) (pasándole como parámetros el array
+				 * correspondiente a personaje, arma o habitación y el número de
+				 * inserciones).(Se adjunta explicación y código del método).
+				 * 
+				 * 
+				 * 
+				 * 
+				 * El menúanterior(1.Persona,2.Arma,3.Habitación,4.Salir)puede aparecer más de
+				 * una vez, dependiendo de si el usuario quiere o no continuar añadiendo.
+				 */
+
+				switch (respuestaN) {
+
+				case 1: {
+
+					System.out.println("¿Cuántos personajes te gustaría anadir?");
+
+					numeroCambios = sc.nextInt();
+
+					/*
+					 * Aquí OJO a este paso de abajo ya que yo solamente estaba llamando al método
+					 * actualizarArray y NO lo estaba igualando con el arrayAnterior, me ha causado
+					 * problemas durante mas de 1 hora encontrarlo!
+					 * 
+					 * (Yo estaba haciendo solo actualizarArray(nombresPersonajes, numeroCambios);)
+					 * 
+					 * y hasta que me he dado cuenta... En fin
+					 */
+
+					nombresPersonajes = actualizarArray(nombresPersonajes, numeroCambios);
+
+					for (int i = nombresPersonajes.length - numeroCambios; i < nombresPersonajes.length; i++) {
+						System.out.println("Escribe el nombre del personaje que quieras anadir: [" + i + "]:");
+
+						nuevoItem = sc.next();
+
+						nombresPersonajes[i] = nuevoItem;
+					}
+
+					System.out.println("Se ha ampliado la capacidad de los personajes");
+
+					System.out.println("Actualmente, los personajes disponibles son: \n\n");
+
+					mostrarArray(nombresPersonajes);
+
+					break;
+
+				}
+
+				case 2: {
+
+					System.out.println("¿Cuántas armas te gustaría anadir?");
+
+					numeroCambios = sc.nextInt();
+
+					nombresArmas = actualizarArray(nombresArmas, numeroCambios);
+
+					for (int i = nombresArmas.length - numeroCambios; i < nombresArmas.length; i++) {
+						System.out.println("Escribe el nombre del arma que quieras anadir: [" + i + "]:");
+
+						nuevoItem = sc.next();
+
+						nombresArmas[i] = nuevoItem;
+					}
+
+					System.out.println("Se ha ampliado la capacidad de las armas");
+
+					System.out.println("Actualmente, las armas disponibles son: \n\n");
+
+					mostrarArray(nombresArmas);
+
+					break;
+				}
+
+				case 3: {
+
+					System.out.println("¿Cuántos lugares te gustaría anadir?");
+
+					numeroCambios = sc.nextInt();
+
+					nombresLugares = actualizarArray(nombresLugares, numeroCambios);
+
+					for (int i = nombresLugares.length - numeroCambios; i < nombresLugares.length; i++) {
+						System.out.println("Escribe el nombre del lugar que quieras anadir: [" + i + "]:");
+
+						nuevoItem = sc.next();
+
+						nombresLugares[i] = nuevoItem;
+					}
+
+					System.out.println("Se ha ampliado la capacidad de los lugares");
+
+					System.out.println("Actualmente, los lugares disponibles son: \n\n");
+
+					mostrarArray(nombresLugares);
+
+					break;
+
+				}
+
+				case 4:
+
+				{
+
+					System.out.println("Okay, sigámos adelante!");
+
+					break;
+				}
+
+				default: {
+					System.out.println("El número escogido no es correcto");
+
+					break;
+				}
+
+				}
+
+			} while (respuestaN != 4);
+
+		}
+
+		else {
+			/*
+			 * En caso contrario (el usuario no quiere introducir ni personas, ni armas, ni
+			 * habitaciones nuevas, punto 3), se muestra un mensaje... ¡Genial, sigamos...!
+			 */
+
+			System.out.println("Okay, sigámos adelante!");
+		}
 
 		/*
-		 * En caso afirmativo, se muestra un menú numerado del 1 al 4, con cuatro
-		 * opciones que serán: 1.Personaje 2.Arma 3.Habitación 4. Salir i. Según la
-		 * opción escogida se llamará a un método concreto que se encargará de solicitar
-		 * en bucle, bien la introducción de personas (opción 1), bien armas (opción 2)
-		 * o bien habitaciones (opción 3) de forma continuada hasta que el usuario
-		 * decida no seguir introduciendo la opción que ha escogido. Cada dato
-		 * introducido (persona, arma o habitación) se almacena en el array
-		 * correspondiente. El menú puede aparecer más de una vez, dependiendo de si el
-		 * usuario quiere o no continuar añadiendo.
+		 * Se informa al usuario de que se va a producir la baraja de las cartas, para
+		 * ello se llama a un método que se encarga de barajar (ver aclaración sobre
+		 * barajar cartas) y almacenar el personaje, arma, habitación y hora como objeto
+		 * de la lista dinámica que hemos creado anteriormente para este fin. Este
+		 * método devolverá true o false en caso de que se haya podido o no hacer dicha
+		 * operación (controla excepciones).
 		 */
 
-		
-		int respuesta;
-		do {
-			mostrarMenu();
-			Scanner sc = new Scanner(System.in);
-			 respuesta = sc.nextInt();
+		System.out.println("\nVamos a proceder con el barajeo de cartas" + "\n..." + "\n......");
 
-			switch (respuesta) {
-			case 1: {
-				nombresPersonajes[nombresPersonajes.length + 1]= "Prueba";
-				break;
-			}
+		int carta1, carta2, carta3;
 
-			case 2: {
-				anadirArma();
-				break;
-			}
+		carta1 = barajarCartas(nombresPersonajes);
 
-			case 3: {
-				anadirLugar();
-				break;
-			}
-			
-			case 4:
-			{
-				break;
-			}
+		carta2 = barajarCartas(nombresArmas);
 
-			default: {
-				System.out.println("No es una opción correcta");
-				break;
-			}
-			}
+		carta3 = barajarCartas(nombresLugares);
 
-		} while (respuesta !=4);
-		
-		
-		
-		
-		for (int i = 0; i < nombresPersonajes.length; i++) {
-			System.out.println(" + " + nombresPersonajes[i]);
-		}
-		
+		System.out.println("El personaje que ha salido es: " + nombresPersonajes[carta1] + "\nEl arma que ha salido es: "
+						+ nombresArmas[carta2] + "\nEl lugar que ha salido es: " + nombresLugares[carta3]);
 
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	//Metodos
+
+	// Metodos
 
 	static void mostrarMenu() {
 		System.out.println("\n\n  ------\n | MENÚ |" + "\n  ------");
@@ -137,43 +256,48 @@ public class Cluedo {
 		System.out.println(" ---------------");
 	}
 
-	static String anadirPersonaje() {
-		Scanner sc = new Scanner(System.in);
+	static String[] actualizarArray(String[] arrayAntiguo, int num) {
 
-		String respuesta;
+		// Creamos un nuevo array para poder copiar el contenido en él
 
-		System.out.println("Introduce el nombre del nuevo personaje");
+		String[] arrayNuevo = new String[arrayAntiguo.length + num];
 
-		respuesta = sc.next();
+		// Con esto copiamos un array en otro array con las posiciones deseadas
 
-		return respuesta;
+		System.arraycopy(arrayAntiguo, 0, arrayNuevo, 0, arrayAntiguo.length);
 
-	}
-
-	static String anadirArma() {
-		Scanner sc = new Scanner(System.in);
-
-		String respuesta;
-
-		System.out.println("Introduce el nombre de la nueva arma");
-
-		respuesta = sc.next();
-
-		return respuesta;
+		return arrayNuevo;
 
 	}
 
-	static String anadirLugar() {
-		Scanner sc = new Scanner(System.in);
+	static String[] mostrarArray(String[] nombreArray)
 
-		String respuesta;
+	{
 
-		System.out.println("Introduce el nombre del nuevo lugar");
+		String[] resultado = new String[nombreArray.length];
 
-		respuesta = sc.next();
+		for (int i = 0; i < nombreArray.length; i++)
 
-		return respuesta;
+		{
+			resultado[i] = "+ " + nombreArray[i];
+			System.out.println(resultado[i]);
+		}
+
+		return resultado;
+	}
+
+	static int barajarCartas(String[] lista) {
+		int num;
+
+		num = (int) (Math.random() * lista.length);
+		
+
+		return num;
+		
+		
 
 	}
+	
+	
 
 }
