@@ -1,8 +1,9 @@
 package retoUD6;
 
+import java.io.Serializable;
 import java.time.*;
 
-public class Jugador {
+public class Jugador  implements Serializable{
 	
 	String nombre,arma,habitacion;
 	LocalTime horaPartida;
@@ -60,6 +61,19 @@ public class Jugador {
 	public void setHoraPartida(LocalTime horaPartida)
 	{
 		this.horaPartida = horaPartida;
+	}
+	
+
+	
+	public String toString() 
+	
+	{
+	    return "Jugador{" +
+	            "nombre='" + nombre + '\'' +
+	            ", arma='" + arma + '\'' +
+	            ", habitacion='" + habitacion + '\'' +
+	            ", horaPartida=" + horaPartida +
+	            '}';
 	}
 
 }
